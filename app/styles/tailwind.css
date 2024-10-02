@@ -4,3 +4,41 @@
  */
 
 @import 'tailwindcss';
+
+@theme {
+    /* Colors */
+    --color-primary: #2D5548;
+    /* Deep green */
+    --color-secondary: #DBA97C;
+    /* Earthy beige */
+    --color-accent: #0A3531;
+    /* Darker accent green */
+    --color-background: #F5F5F5;
+    /* Light greyish background */
+    --color-text-primary: #333333;
+    /* Dark gray for body text */
+    --color-text-secondary: #666666;
+    /* Lighter gray for subtitles */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    /* Fonts */
+    --font-sans: "Helvetica Neue", Arial, sans-serif;
+
+    /* Spacing */
+    --spacing-18: 4.5rem;
+    --spacing-22: 5.5rem;
+    --spacing-30: 7.5rem;
+
+    /* Max Width */
+    --max-width-8xl: 90rem;
+
+    /* Box Shadow */
+    --box-shadow-card: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* Border Radius */
+    --border-radius-4xl: 2rem;
+
+    /* Animations */
+    --keyframe-fade-in: fadeIn 1s ease-in-out;
+}
