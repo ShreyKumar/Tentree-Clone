@@ -1,6 +1,11 @@
-import {Suspense} from 'react';
-import {Await, NavLink} from '@remix-run/react';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import { Suspense } from 'react';
+import { Await, NavLink } from '@remix-run/react';
+import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated';
+import CertifiedBadges from './CertifiedBadges';
+
+import backToTheTop from '~/assets/back-to-the-top.png'
+import FooterSection from './FooterSection';
+import FooterAcknowledgements from './FooterAcknowledgements';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -41,15 +46,23 @@ function FooterMenu({
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
 }) {
+  console.log({ menu })
+
   return (
-    <nav className="footer-menu" role="navigation">
+    <nav className="footer-menu bg-background text-primary grid gap-5 grid-cols-5 grid-rows-3 p-5" role="navigation">
+      <div className='col-span-5 row-span-1 h-3'>
+        <img className='w-24' src={backToTheTop} alt="Back to the Top" />
+      </div>
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
         if (!item.url) return null;
+
+        console.log({ item })
+
         // if the url is internal, we strip the domain
         const url =
           item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
+            item.url.includes(publicStoreDomain) ||
+            item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
         const isExternal = !url.startsWith('/');
@@ -58,17 +71,13 @@ function FooterMenu({
             {item.title}
           </a>
         ) : (
-          <NavLink
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
+          <FooterSection {...item} url={url} />
         );
       })}
+      <div className='col-span-1'>
+        <CertifiedBadges />
+      </div>
+      <FooterAcknowledgements />
     </nav>
   );
 }
@@ -114,16 +123,3 @@ const FALLBACK_FOOTER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
-}
