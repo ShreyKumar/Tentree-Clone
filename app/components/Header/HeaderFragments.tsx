@@ -1,13 +1,14 @@
 import { useAside } from "../Aside";
 import { HeaderProps } from "./types";
 import { Suspense } from "react";
-import { Await, useAsyncValue } from "@remix-run/react";
+import { Await, Link, useAsyncValue } from "@remix-run/react";
 import { CartApiQueryFragment } from "storefrontapi.generated";
 import { CartViewPayload, useAnalytics, useOptimisticCart } from "@shopify/hydrogen";
 
 import magnifyingGlass from '~/assets/icons/search-bold.svg'
 import shoppingBag from '~/assets/icons/shopping-bag-bold.svg'
 import burgerMenu from '~/assets/icons/burger-menu-bold.svg'
+import heart from '~/assets/icons/heart.svg'
 
 export function CartBadge({ count }: { count: number | null }) {
     const { open } = useAside();
@@ -47,6 +48,16 @@ export function SearchToggle() {
         <button className="reset" onClick={() => open('search')}>
             <img src={magnifyingGlass} alt="Search" />
         </button>
+    );
+}
+
+export function WishlistLink() {
+    return (
+        <Link to="/wishlist">
+            <button>
+                <img src={heart} alt="Wishlist" />
+            </button>
+        </Link>
     );
 }
 

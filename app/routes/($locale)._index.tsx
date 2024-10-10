@@ -31,8 +31,6 @@ async function loadCriticalData({ context }: LoaderFunctionArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  console.log("Critical data: ", collections.nodes[0])
-
   return {
     featuredCollection: collections.nodes[0],
   };

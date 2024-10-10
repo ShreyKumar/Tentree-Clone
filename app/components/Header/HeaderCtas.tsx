@@ -7,7 +7,7 @@ import burgerMenu from '~/assets/icons/burger-menu-bold.svg'
 import { useAside } from "../Aside";
 import { Suspense } from "react";
 import { Await } from "@remix-run/react";
-import { CartToggle, SearchToggle } from "./HeaderFragments";
+import { CartToggle, SearchToggle, WishlistLink } from "./HeaderFragments";
 
 export function HeaderCtas({
     isLoggedIn,
@@ -24,6 +24,7 @@ export function HeaderCtas({
             </Await>
           </Suspense>
         </NavLink> */}
+            <WishlistLink />
             <SearchToggle />
             <CartToggle cart={cart} />
         </nav>

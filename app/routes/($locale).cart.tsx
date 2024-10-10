@@ -1,21 +1,22 @@
-import {Await, type MetaFunction, useRouteLoaderData} from '@remix-run/react';
-import {Suspense} from 'react';
-import type {CartQueryDataReturn} from '@shopify/hydrogen';
-import {CartForm} from '@shopify/hydrogen';
-import {json, type ActionFunctionArgs} from '@shopify/remix-oxygen';
-import {CartMain} from '~/components/CartMain';
-import type {RootLoader} from '~/root';
+import { Await, type MetaFunction, useRouteLoaderData } from '@remix-run/react';
+import { Suspense } from 'react';
+import type { CartQueryDataReturn } from '@shopify/hydrogen';
+import { CartForm } from '@shopify/hydrogen';
+import { json, type ActionFunctionArgs } from '@shopify/remix-oxygen';
+import { CartMain } from '~/components/CartMain';
+import type { RootLoader } from '~/root';
+import { PRODUCT_QUERY } from './($locale).products.$handle';
 
 export const meta: MetaFunction = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return [{ title: `Hydrogen | Cart` }];
 };
 
-export async function action({request, context}: ActionFunctionArgs) {
-  const {cart} = context;
+export async function action({ request, context }: ActionFunctionArgs) {
+  const { cart, storefront } = context;
 
   const formData = await request.formData();
 
-  const {action, inputs} = CartForm.getFormInput(formData);
+  const { action, inputs } = CartForm.getFormInput(formData);
 
   if (!action) {
     throw new Error('No action provided');
@@ -33,6 +34,9 @@ export async function action({request, context}: ActionFunctionArgs) {
       break;
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
+      break;
+    case CartForm.ACTIONS.MetafieldsSet:
+      result = await cart.setMetafields(inputs.metafields);
       break;
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
@@ -74,7 +78,7 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-  const {cart: cartResult, errors} = result;
+  const { cart: cartResult, errors } = result;
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string') {
@@ -84,13 +88,13 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   return json(
     {
-      cart: cartResult,
+      cart: { ...cartResult },
       errors,
       analytics: {
         cartId,
       },
     },
-    {status, headers},
+    { status, headers },
   );
 }
 

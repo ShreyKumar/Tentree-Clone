@@ -46,8 +46,6 @@ function FooterMenu({
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
 }) {
-  console.log({ menu })
-
   return (
     <nav className="footer-menu bg-background text-primary grid gap-5 grid-cols-5 grid-rows-3 p-5" role="navigation">
       <div className='col-span-5 row-span-1 h-3'>
@@ -55,8 +53,6 @@ function FooterMenu({
       </div>
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
         if (!item.url) return null;
-
-        console.log({ item })
 
         // if the url is internal, we strip the domain
         const url =

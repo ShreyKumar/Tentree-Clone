@@ -106,6 +106,10 @@ export const CART_QUERY_FRAGMENT = `#graphql
     }
   }
   fragment CartApiQuery on Cart {
+    metafield(namespace: "custom", key: "wishlistItem") {
+      key
+      value
+    }
     updatedAt
     id
     appliedGiftCards {
