@@ -23,16 +23,13 @@ export function AddToWishlistButton({
 }) {
     const fetcher = useFetcher()
     const cart = useCart()
+    const originalWishlistItems = JSON.parse(cart?.metafield?.value ??
+        '[]'
+    ) as string[]
+    const selectedVariantHandles = lines.map(({ selectedVariant }) => (selectedVariant as { product: Product }).product.handle)
 
-    const handleWishlist = () => {
-        console.log('lines', lines)
-
-        const selectedVariantIds = lines.map(({ selectedVariant }) => (selectedVariant as { product: Product }).product.handle)
-
-        const originalWishlistItems = JSON.parse(cart?.metafield?.value ??
-            '[]'
-        ) as string[]
-        const newWishlistItems = [...originalWishlistItems, ...selectedVariantIds]
+    const handleAddWishlist = () => {
+        const newWishlistItems = [...originalWishlistItems, ...selectedVariantHandles]
 
         fetcher.submit(
             {
@@ -51,8 +48,35 @@ export function AddToWishlistButton({
         )
     }
 
+    const handleRemoveWishlist = () => {
+        const newWishlistItems = originalWishlistItems.filter((handle) => !selectedVariantHandles.includes(handle))
+
+        fetcher.submit(
+            {
+                [CartForm.INPUT_NAME]: JSON.stringify({
+                    action: CartForm.ACTIONS.MetafieldsSet,
+                    inputs: {
+                        metafields: [{
+                            key: 'custom.wishlistItem',
+                            type: 'string',
+                            value: JSON.stringify(newWishlistItems),
+                        }]
+                    },
+                }),
+            },
+            { method: 'POST', action: '/cart' }
+        )
+    }
+
+    const inWishlist = selectedVariantHandles.some((handle) => originalWishlistItems.includes(handle))
+
+    if (inWishlist) {
+        return (
+            <button onClick={handleRemoveWishlist}>Remove from Wishlist</button>
+        )
+    }
     return (
-        <button onClick={handleWishlist}>Add to Wishlist</button>
+        <button onClick={handleAddWishlist}>Add to Wishlist</button>
     )
 
     // return (
